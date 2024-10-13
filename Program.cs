@@ -17,8 +17,34 @@ internal class Program
     private static async Task Main(string[] args)
     {
         Console.InputEncoding = Encoding.UTF8;
-        Console.WriteLine("输入文件名:");
+        Console.WriteLine("输入文件名，或启用自动搜索:");
         var srcFile = Console.ReadLine();
+        if (string.IsNullOrEmpty(srcFile))
+        {
+            var files = Directory.GetFiles(".");
+            List<string> songs = [];
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (Path.GetExtension(files[i]) == ".flac")
+                {
+                    Console.WriteLine($"[{songs.Count}] " + Path.GetFileName(files[i]));
+                    songs.Add(Path.GetFileName(files[i]));
+                }
+            }
+
+            int index = 0;
+            Console.WriteLine("输入序号，默认为0:");
+            var indexStr = Console.ReadLine();
+            if (string.IsNullOrEmpty(indexStr))
+            {
+                index = 0;
+            }
+            else
+            {
+                index = int.Parse(indexStr);
+            }
+            srcFile = songs[index];
+        }
 
         if (!File.Exists(srcFile))
         {
